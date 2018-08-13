@@ -3,19 +3,17 @@ from flask import Flask, render_template, request,session,app,redirect
 import logic
 
 app = Flask(__name__)
-app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+app.secret_key = b'Some_bytes' # Not same as my own
 
 @app.route('/')
 def home():
-  random_number =logic.get_random_number()
-  book= logic.get_book(random_number)
+  book= logic.get_book()
   session['guess_correct'] = "false" 
 
   if 'error' in book:
     with app.app_context():
       return render_template('book_guesser.html',response=book)
     
-  session['index'] = random_number
   session['book_info'] = book['book_info']
   session.modified = True
   
@@ -36,7 +34,7 @@ def guess():
   if 'error' in guessed_book:
     evaluated_guess = guessed_book 
   else:
-    evaluated_guess = logic.eval_guess(session['index'], guessed_book['guess'])
+    evaluated_guess = logic.eval_guess(session['book_info']['title'], guessed_book['guess'])
     if evaluated_guess['message'] == "correct":
       session['guess_correct'] = "true" 
       return redirect('/end')

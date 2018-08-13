@@ -3,8 +3,8 @@ from google.appengine.api import urlfetch
 import json
 import re
 
-def get_book(index):
-  book = get_book_by_index(index)
+def get_book():
+  book = get_random_book()
   url = "https://www.googleapis.com/books/v1/volumes?q="+book+"&country=AU"
   try:
     result = urlfetch.fetch(url)
@@ -17,10 +17,6 @@ def get_book(index):
     return {"error": "error fetching URL" }
   except Exception as e:
     return {'error': e.message}
-
-def get_random_number():
-  random_int = randint(0, 9)
-  return random_int
 
 def handle_api_resnponse(response):
   decoded_response = response.decode("utf-8")
@@ -38,9 +34,8 @@ def handle_api_resnponse(response):
 
   return book_info
 
-def eval_guess(index,guess): 
-  book = get_book_by_index(index)
-  book = book.replace('+', ' ')
+def eval_guess(guess,book): 
+  book = book.replace('+', ' ').lower()
   guess = guess.lower()
   if guess == book:
     return {'message' : "correct"}
@@ -50,9 +45,11 @@ def eval_guess(index,guess):
     else:
       return {'message' : "wrong"}
   else:
-    return {'message' : "wrong, don't you know your books bro? Get a grip"}
+    return {'message' : "wrong, don't you know your books? Get a grip"}
 
-def get_book_by_index(index):
+def get_random_book():
+
+  index = randint(0, 10)
   list_of_books = [
     "catcher+in+the+rye",
     "the+picture+of+dorian+gray",

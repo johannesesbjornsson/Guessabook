@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<body style="text-align:center;">
+
+<h2>Guessing Time</h2>
+<p><b>Hint - Description </b><p>
+<p id="description"> {{ description }} </p>
+<p><b>Hint - Author </b><p>
+{% if show_author =="false" %}
+<button value="author" onclick="showHints(this)">Click to show Author  </button>
+<p id="author" hidden="true"> {{ author }} </p>
+{% else %}
+<p> {{ author }} </p>
+{% endif %}
+<form action="/guess" method="post">
+What book do you think it is?<br>
+<input type="text" id="book" name="book">
+<input type="text" hidden="true" name="show_author" id="show_author" value="{{ show_author }}">
+<br>
+<input type="submit" value="Guess"></input>
+</form>
+{% if 'error' in response %}
+<p><font color="red">{{ response['error'] }}</font></p>
+{% elif 'message' in response %}
+<p> {{response['message']}} </p>
+{% endif %}
+<br>
+<form action="/end" method="post">
+<input type="submit" value="I give up"></input>
+</form>
+<script>
+function showHints(button) {
+    var hint = document.getElementById("author")
+    var show_author = document.getElementById("show_author")
+    show_author.value="true"
+    button.hidden=true
+    hint.hidden = false
+}
+</script>
+
+</body>
+</html>
